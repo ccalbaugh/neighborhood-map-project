@@ -1,0 +1,23 @@
+* {
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.map {
+	min-height: 500px;
+	min-width: 400px;
+	background-color: #CCC;
+}
+
+.search-input {
+	width: 100%;
+}
+
+#name-list {
+	list-style-type: none;
+}

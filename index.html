@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Neighborhood Map</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4k5Yie1sqInqZrBrWgubWKRaCBO2x6l8&libraries=places"></script>
 </head>
 <body>
 	<section class="search-container">
-		<div class="search-bar"
-			<input class="search-input">
+		<div class="search-bar">
+			<input id="place-id" class="search-input" data-bind="value: place.name" />
+			<button class="search-btn" id="submit" data-bind="click: sortNames"></button>
 		</div><!-- search-bar -->
 	</section><!-- search-container -->
 
 	<section class="list-container">
-		<div class="list-view"></div><!-- list-view -->
+		<div id="list-view" class="list-view">
+			<ul id="name-list">
+				<li class="list-elem" data-bind="foreach: place().name">
+			</ul>
+		</div><!-- list-view -->
 	</section><!-- list-container -->
 
 	<section class="map-container">
-		<div class="map"></div><!-- map -->
+		<div id="map" class="map"></div><!-- map -->
 	</section><!-- map-container -->
+
+	<script src="bower_components/knockout/dist/knockout.js"></script>
+	<script src="js/view/app.js"></script>
 </body>
 </html>

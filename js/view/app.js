@@ -10,12 +10,18 @@
 //
 //
 
-var locations = [
-		{}
-	];
+
 /*-----Model-----*/ 
 var Model = function() {
-
+	var locations = [
+		{
+			'Englert' : '41.659794, -91.532322',
+			'Basta' : '41.661022, -91.533625',
+			'Donnellys' : '41.659075, -91.534083',
+			'Shorts' : '41.660629, -91.534355',
+			'Film Scene' : '41.659283, -91.533779'
+		}
+	];
 };
 
 /*-----View-----*/
@@ -23,28 +29,31 @@ var View = function() {
 
 };
 
+
+
 /*-----ViewModel-----*/
 var ViewModel = function() {
 	var self = this;
-
-	this.nameList = ko.observableArray([]);
-	// Stat on this list array
-
 	var map;
 	var infoWindow;
+	var markers = [];
+	
+	this.place = ko.observable();
+	self.placeList = ko.observableArray([]);
+
+	var createListItem = function(place) {
+		var listItem = '<li>' + place.name + '</li>';
+		self.placeList().push(listItem);
+		return self.placeList();
+	};
 
 	function initialize() {
 	  var englert = new google.maps.LatLng(41.659794, -91.532322);
 
+
 	  map = new google.maps.Map(document.getElementById('map'), {
 	    center: englert,
 	    zoom: 15
-	  });
-
-	  var marker = new google.maps.Marker({
-	    map: map,
-	    position: englert,
-	    title: 'Hello World!'
 	  });
 
 	  infowindow = new google.maps.InfoWindow();
@@ -58,45 +67,68 @@ var ViewModel = function() {
 	  service.nearbySearch({
 	    location: englert,
 	    radius: '500',
-	    types: ['store']
+	    types: ['restaurant', 'store']
 	  }, locationIterator);
 
-		// var request = {
-		//  placeId: document.getElementById('place-id').value
-		// };
+		var request = {
+		 placeId: document.getElementById('place-id').value
+		};
 	}
 
 	function locationIterator(results, status) {
 		var resultsArr = [];
 		if (status === google.maps.places.PlacesServiceStatus.OK) {
 			for (var i = 0; i < results.length; i++) {
-				createMarker(results[i]);
+				createMarkerWithTimeout(results[i]);
 				createListItem(results[i]);
-				resultsArr.push(results[i]);
+				
 			}
-			console.log(resultsArr.length);
+			console.log(self.placeList());
 		}
 	}
 
-	function createMarker(place) {
-		var placeLoc = place.geometry.location;
-		var marker = new google.maps.Marker({
-			map: map,
-			position: placeLoc
-		});
+	function createMarkerWithTimeout(place, timeout) {
+		window.setTimeout(function() {
+			var placeLoc = place.geometry.location;
+			marker = new google.maps.Marker({
+				map: map,
+				animation: google.maps.Animation.DROP,
+				position: placeLoc
+			});
+		}, timeout);
 
-		google.maps.event.addListener(marker, 'click', function() {
+		google.maps.event.addListener(Marker, 'click', function() {
+			toggleBounce();
 			infowindow.setContent(place.name);
 			infowindow.open(map, this);
 		});
+
+		function toggleBounce() {
+			if (marker.getAnimation() !== null) {
+				marker.setAnimation(null);
+			} else {
+				marker.setAnimation(google.maps.Animation.BOUNCE);
+			}
+		}
+	}	
+
+	function clearMarkers() {
+		for (var i = 0; i < markers.length; i++) {
+			markers[i].setMap(null);
+		}
+		markers = [];
 	}
 
-	function createListItem(place) {
-		var nameArr = [];
-		var nameList = document.getElementById('name-list');
-		nameList.innerHTML = '<li>' + place.name + '</li>';
+	function drop() {
+		clearMarkers();
+		for (var i = 0; i < markers.length; i++) {
+			createMarkerWithTimeout(markers[i], i * 200);
+		}
 	}
 
+	
+
+	
 	function placeDetailsByPlaceId(service, map, infowindow) {
 	  // Create and send the request to obtain details for a specific place,
 	  // using its Place ID.

@@ -1,5 +1,6 @@
 * {
 	box-sizing: border-box;
+	border: 1px solid green;
 }
 
 html, body {
@@ -8,16 +9,65 @@ html, body {
 	padding: 0;
 }
 
+.map-container {
+	height: 100%;
+	width: 100%;
+	left: 0;
+	top: 0;
+}
+
 .map {
-	min-height: 500px;
-	min-width: 400px;
-	background-color: #CCC;
+	height: 75%;
+	width: 70%;
+	background-color: #ccc;
 }
 
 .search-input {
 	width: 100%;
+	min-height: 10%;
 }
 
-#name-list {
+ul {
+	padding: 0px;
 	list-style-type: none;
 }
+
+.list-container {
+	float: left;
+	width: 30%;
+	align-content: left;
+	overflow: none;
+}
+
+.list-elem {
+	display: block;
+	padding: 0.3em 0;
+	border: 1px solid #e5e5e5;
+}
+
+.list-elem:hover {
+	cursor: pointer;
+	background-color: #bbb;
+	font-size: 110%;
+}
+
+.list-elem:active {
+	background-color: #bbb;
+}
+
+.infoWindow {
+	justify-content: center;
+	text-align: center;
+	background-color: #f06d06;
+}
+
+.infoWindow strong {
+	font-size: 24px;
+}
+
+
+/*****************************
+		MEDIA QUERIES
+******************************/
+
+@media (min-width: 400px)

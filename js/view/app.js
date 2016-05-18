@@ -1,167 +1,177 @@
-var locations = [
+var places = [
 	{
 		title: 'The Englert Theater',
-		id: 'ChIJSyeNzu9B5IcRQzciSCOPPuk',  // A Google Places ID.
-		address: '221 E Washington St, Iowa City, IA',
+		place_id: 'ChIJSyeNzu9B5IcRQzciSCOPPuk',  // A Google Places ID.
+		formatted_address: '221 E Washington St, Iowa City, IA 52240',
 		latLng: {lat: 41.659794, lng: -91.532322},
+		marker: ""
 		// lat: "41.659794",
 		// lng: "-91.532322"
 	},
 	{
 		title: 'Basta Pizzeria Ristorante',
-		id: 'ChIJn6fO2fFB5IcR6jVX9EN9K6A',  // A Google Places ID.
-		address: '121 Iowa Ave, Iowa City, IA',
+		place_id: 'ChIJn6fO2fFB5IcR6jVX9EN9K6A',  // A Google Places place_id.
+		formatted_address: '121 Iowa Ave, Iowa City, IA 52240',
 		latLng: {lat: 41.661022, lng: -91.533625},
 		// lat: "41.661022",
 		// lng: "-91.533625"
 	},
 	{
 		title: 'Donnellys Irish Pub',
-		id: 'ChIJgxklQ-5B5IcRjdC81k4t4ug',  // A Google Places ID.
-		address: '110 E College St, Iowa City, IA',
+		place_id: 'ChIJgxklQ-5B5IcRjdC81k4t4ug',  // A Google Places place_id.
+		formatted_address: '110 E College St, Iowa City, IA 52240',
 		latLng: {lat: 41.659075, lng: -91.534083},
 		// lat: "41.659794",
 		// lng: "-91.532322"
 	}, 
 	{
 		title: 'Shorts Burger & Shine',
-		id: 'ChIJEactIO5B5IcRJ6QdjEyd_UI',  // A Google Places ID.
-		address: '18 S Clinton St, Iowa City, IA',
+		place_id: 'ChIJEactIO5B5IcRJ6QdjEyd_UI',  // A Google Places place_id.
+		formatted_address: '18 S Clinton St, Iowa City, IA 52240',
 		latLng: {lat: 41.660629, lng: -91.534355},
 		// lat: "41.659794",
 		// lng: "-91.532322"
 	}, 
 	{
 		title: 'FilmScene',
-		id: 'ChIJ9WOyRe5B5IcRgFg8TDssBz8',  // A Google Places ID.
-		address: '118 E College St, Iowa City, IA',
+		place_id: 'ChIJ9WOyRe5B5IcRgFg8TDssBz8',  // A Google Places place_id.
+		formatted_address: '118 E College St, Iowa City, IA 52240',
 		latLng: {lat: 41.659283, lng: -91.533779},
 		// lat: "41.659794",
 		// lng: "-91.532322"
-	}
+	},
+	{
+		title: 'Blue Moose Inc',
+		place_id: '',  // A Google Places place_id.
+		formatted_address: '211 Iowa Ave, Iowa City, IA 52240',
+		latLng: {lat: 41.661003, lng: -91.532341}
+	},
+	{
+		title: 'The Mill Restaurant',
+		place_id: '',  // A Google Places place_id.
+		formatted_address: '120 E Burlington St, Iowa City, IA 52240',
+		latLng: {lat: 41.658244, lng: -91.533651}
+	},
 ];
 
-var LocationModel = function(data) {
+var Place = function(data) {
 	this.address = ko.observable(data.address);
-	this.lat = ko.observable(data.lat);
-	this.lng = ko.observable(data.lng);
+	this.latLng = ko.observable(data.latLng);
 	this.title = ko.observable(data.title);
 	this.marker = ko.observable(0);
-
-	// this.locationMarker = function(data) {
-	// 	var marker = new google.maps.Marker({
-	// 		position: LatLng,
-	// 		map: map
-	// 	});
-	// 	data.marker(marker);
-	// 	console.log(position);
-	// };
-
-	// var removeMarker = function(address) {
-	// 	if (address != null) {
-	// 		address.marker().setMap(null);
-	// 	}
-	// };
 };
 
 var ViewModel = function() {
 	var self = this;
 
-	self.userInput = ko.observable('');
+	self.userInput = ko.observable();
 	self.allPlaces = [];
-	self.visiblePlaces = ko.observableArray();
+	self.visiblePlaces = ko.observableArray([]);
 
-	// creates new LocationModel objects for each location in locations
-	locations.forEach(function(location) {
-		self.allPlaces.push( new LocationModel(location) );
+	places.forEach(function(place) {
+		self.visiblePlaces().push(place);
 	});
 
-	map = new google.maps.Map(document.querySelector('#map'), {
-		center: {lat: 41.659794, lng: -91.532322},
-		zoom: 17,
-		disableDefaultUI: true
+	places.forEach(function(place) {
+		self.allPlaces.push(place);
 	});
 
-	self.initialize = function() {
-		self.createListItem = function(location) {
-			var listItem = '<li>' + location.name + '</li>';
-			self.visiblePlaces.push(listItem);
-			return self.visiblePlaces;
-		};
+	// animates the correct marker
+	self.markerClick = function(place) {
+		google.maps.event.trigger(place.marker, 'click');
 	};
-	//-------------------From Codepen-----------------------
-	self.allPlaces.forEach(function(place) {
-		var markerOptions = {
-			map: self.googleMap,
-			position: place.latLng
-		};
-
-		place.marker = new google.maps.Marker(markerOptions);
-	});
-
-	self.allPlaces.forEach(function(place) {
-		self.visiblePlaces.push(place);
-	});
 	
-  	var service = new google.maps.places.PlacesService(map);
-
-  	// document.getElementById('submit').addEventListener('click', function() {
-	  //   placeDetailsByPlaceId(service, map, infowindow);
-	  // });
-
-	function markerFunction(marker, infoWindow) {
-
-		self.clearMarkers = function() {
-			for (var i = 0; i < markers.length; i++) {
-				markers[i].setMap(null);
-			}
-			markers = [];
+	self.currentLocation = ko.observable();
+		self.setLocation = function(clickedLocation) {
+			self.currentLocation(clickedLocation);
 		};
 
-		self.drop = function() {
-			clearMarkers();
-			for (var i = 0; i < markers.length; i++) {
-				createMarkerWithTimeout(markers[i], i * 200);
-			}
-		};
+	function initMap() {
 
-		self.toggleBounce = function() {
-			if (marker.getAnimation() !== null) {
-				setTimeout(function() { marker.setAnimation(null); }, 1000);
-			} else {
-				marker.setAnimation(google.maps.Animation.BOUNCE);
-			}
-			setLocation(marker);
-			drop(marker);
-		};		
+		map = new google.maps.Map(document.querySelector('#map'), {
+			center: {lat: 41.659794, lng: -91.532322},
+			zoom: 16
+		});
+
+		function drop() {
+			for (var i = 0; i < self.visiblePlaces().length; i++) {
+				addMarkerWithTimeout(self.visiblePlaces()[i], i * 300);
+			}	
+		}
+
+		function addMarkerWithTimeout(place, timeout) {
+			setTimeout(function() {
+				place.marker = new google.maps.Marker({
+					address: place.address,
+					position: place.latLng,
+					animation: google.maps.Animation.DROP,
+					map: map,
+					title: place.title
+				});	
+
+				place.infoWindow = new google.maps.InfoWindow({});
+
+				place.infoWindow.setContent('<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
+		          'Place ID: ' + place.place_id + '<br>' +
+		          place.formatted_address + '</div>');				
+
+				google.maps.event.addListener(place.marker, 'click', selectMarker(place, place.marker, place.infoWindow));
+
+			}, timeout);
+		}
+
+		drop();
 	}
+	
+	var service = new google.maps.places.PlacesService(map);
 
-	locations.forEach(function(place) {
-		var marker = new google.maps.Marker({
-			address: place.address,
-			position: place.latLng,
-			map: map,
-			title: place.title
-		});
+  	var lastInfoWindow = null;
 
-		infowindow = new google.maps.InfoWindow({
-			content: place.title
-		});
+	function selectMarker(place, marker, infoWindow) {
+		function toggleBounce(marker) {
+			if (marker.getAnimation() !== null) {
+				setTimeout(function() { marker.setAnimation(null); }, 750);
+			} else {
+				// Sets the marker to bounce twice and then stop, thanks to Simon Steinberger on stackoverflow for the solution
+				marker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function() { marker.setAnimation(null); }, 750);
+				self.setLocation(marker);
+			}
+		};
+		// this function will 
+		return function() {
 
-		google.maps.event.addListener(marker, 'click', markerFunction(marker, infowindow));
-		self.visiblePlaces.push(marker);
-	});
+			if (lastInfoWindow === infoWindow) {
+				toggleBounce(marker);
+				currentLocation = null;
+				infoWindow.close(map, this);
+				lastInfoWindow = null;
+			} else {
+
+				if (lastInfoWindow !== null) {
+					lastInfoWindow.close(map, this);
+					toggleBounce(marker);
+				}
+
+			toggleBounce(marker);	
+	        infoWindow.open(map, this);
+			lastInfoWindow = infoWindow;
+
+			map.panTo(place.latLng);
+			}
+		}
+	}
 
 	self.filterMarkers = function() {
 		var searchInput = self.userInput().toLowerCase();
-
-		self.visiblePlaces().removeAll();
-
+		// clears the observable array so the list can be repopulated with matching results
+		self.visiblePlaces.removeAll();
+		// visiblePlaces is used for the list of names, and allPlaces is used for the markers
 		self.allPlaces.forEach(function(place) {
 			place.marker.setVisible(false);
 
 			if (place.title.toLowerCase().indexOf(searchInput) !== -1) {
-				self.visiblePlaces().push(place);
+				self.visiblePlaces.push(place);
 			}
 		});
 
@@ -170,85 +180,8 @@ var ViewModel = function() {
 		});
 	};
 
-	for (var i = 0; i < locations.length; i++) {
-		var latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
-		var marker = new google.maps.Marker({
-			address: locations[i].address,
-			position: locations[i].latLng,
-			map: map,
-			title: locations[i].title,
-		});
-		console.log("hello");
-		infoWindow = new google.maps.InfoWindow({
-		    content: locations[i].title
-		});
-
-		google.maps.event.addListener(marker, 'click', markerFunction(marker, infoWindow));
-		self.allPlaces.push(marker);
-	}
-
-	this.currentLocation = ko.observable();
-	this.setLocation = function(clickedLocation) {
-		self.currentLocation(clickedLocation);
-	};
-
-	function createMarkerWithTimeout(place, timeout) {
-		window.setTimeout(function() {
-			var placeLoc = place.geometry.location;
-			marker = new google.maps.Marker({
-				map: map,
-				animation: google.maps.Animation.DROP,
-				position: placeLoc
-			});
-		}, timeout);
-
-		google.maps.event.addListener(Marker, 'click', function() {
-			toggleBounce();
-			infowindow.setContent(place.name);
-			infowindow.open(map, this);
-		});
-	}	
-	
-	function placeDetailsByPlaceId(service, map, infowindow) {
-	  // Create and send the request to obtain details for a specific place,
-	  // using its Place ID.
-	  
-
-	  service.getDetails(request, function (place, status) {
-	    if (status === google.maps.places.PlacesServiceStatus.OK) {
-	      // If the request succeeds, draw the place location on the map
-	      // as a marker, and register an event to handle a click on the marker.
-	      console.log("Success");
-	      var marker = new google.maps.Marker({
-	        map: map,
-	        position: place.geometry.location
-	      });
-
-	      google.maps.event.addListener(marker, 'click', function() {
-	        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-	          'Place ID: ' + place.place_id + '<br>' +
-	          place.formatted_address + '</div>');
-	        infowindow.open(map, this);
-	      });
-
-	      map.panTo(place.geometry.location);
-	    }
-	  });
-	}
-
-	function locationIterator(results, status) {
-		var resultsArr = [];
-		if (status === google.maps.places.PlacesServiceStatus.OK) {
-			for (var i = 0; i < results.length; i++) {
-				createMarkerWithTimeout(results[i]);
-				createListItem(results[i]);
-			}
-			console.log(self.allPlaces);
-		}
-	}
-	
-	// Run the initialize function when the window has finished loading.
-	//google.maps.event.addDomListener(window, 'load', initialize);
+	// Run the initMap function when the window has finished loading.
+	google.maps.event.addDomListener(window, 'load', initMap);
 };
 
 ko.applyBindings( new ViewModel() );

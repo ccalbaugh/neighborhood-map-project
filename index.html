@@ -18,21 +18,20 @@
 
 	<section class="search-container">
 		<div class="search-bar">
-			<input type="search" id="place-id" class="search-input" placeholder="keyword search..." data-bind="textInput: userInput, event: {keyup: filterMarkers}" />
-			<button class="search-btn" id="submit"></button>
+			<input type="search" id="place-id" class="search-input" placeholder="Search" data-bind="textInput: userInput, event: {keyup: filterMarkers}" />
 		</div><!-- search-bar -->
 	</section><!-- search-container -->
 
 	<section class="list-container">
 		<div id="list-view" class="list-view">
 			<ul id="name-list" data-bind="foreach: visiblePlaces">
-				<li class="list-elem" data-bind="text: title">
+				<li class="list-elem" data-bind="text: title, click: $root.markerClick">
 			</ul>
 		</div><!-- list-view -->
 	</section><!-- list-container -->
 
 	<section class="map-container">
-		<div id="map" class="map">
+		<div id="map" class="map" data-bind="click: $root.setLocation">
 			<!-- <button class="drop-btn" data-bind="click: drop" -->
 		</div><!-- map -->
 	</section><!-- map-container -->

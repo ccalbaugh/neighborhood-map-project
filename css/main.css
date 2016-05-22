@@ -1,6 +1,6 @@
 * {
 	box-sizing: border-box;
-	border: 1px solid green;
+	border: 1px solid blue;
 }
 
 html, body {
@@ -9,27 +9,41 @@ html, body {
 	padding: 0;
 }
 
-.map-container {
-	height: 100%;
-	width: 100%;
-	left: 0;
-	top: 0;
-}
-
-.map {
-	height: 75%;
-	width: 70%;
-	background-color: #ccc;
-}
-
-.search-input {
-	width: 100%;
-	min-height: 10%;
-}
-
 ul {
 	padding: 0px;
 	list-style-type: none;
+}
+
+.map {
+	height: 100%;
+	background-color: #ccc;
+	padding-bottom: 75%;
+	right: 0;
+	top: 0;
+}
+
+#pip-pano {
+	height: 200px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.search-container {
+	display: flex;
+	width: 100%;
+}
+
+.searchBar-tag {
+	display: flex;
+	width: 25%;
+}
+
+.search-input {
+	display: flex;
+	width: 75%;
 }
 
 .list-container {
@@ -37,6 +51,7 @@ ul {
 	width: 30%;
 	align-content: left;
 	overflow: none;
+	margin-right: 3%;
 }
 
 .list-elem {
@@ -58,7 +73,6 @@ ul {
 .infoWindow {
 	justify-content: center;
 	text-align: center;
-	background-color: #f06d06;
 }
 
 .infoWindow strong {
@@ -70,4 +84,6 @@ ul {
 		MEDIA QUERIES
 ******************************/
 
-@media (min-width: 400px)
+@media (min-width: 400px) {
+
+}

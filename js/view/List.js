@@ -1,4 +1,4 @@
-(function(window) {
+(function(global) {
 	var List = (function() {
 		function List(params) {
 			this.items = [];
@@ -31,7 +31,7 @@
 				}
 
 				if (action) {
-					action.call(this, matches);
+					action.call(this, matches);	
 				}
 
 				return matches;
@@ -45,5 +45,5 @@
 		return new List(params);
 	};
 
-	window.List = List;
-}(window));
+	global.List = List;
+}(this));

@@ -6,11 +6,29 @@
 	<title>Neighborhood Map | FEND Projects</title>
 	<!-- minimum-scale prevents the user from viewing overflow from the body that should be hidden -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-	<!-- Normalize.css from node_modules -->
+
 	<link rel="stylesheet" type="text/css" href="node_modules/normalize.css/normalize.css">
-	<!-- the main style for the application -->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
-	
+
+	<!-- Google Maps Api and PLaces Library -->
+	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4k5Yie1sqInqZrBrWgubWKRaCBO2x6l8&libraries=places&callback=initMap" onerror="googleError()"></script>
+
+	<script>
+		function initMap() {
+			var options = mapster.MAP_OPTIONS,
+			element = document.querySelector('#map-canvas'),
+			map = mapster.create(element, options);
+
+			service = new google.maps.places.PlacesService(map);
+
+			ko.applyBindings( new ViewModel() );
+		}
+	</script>
+
+	<script async src="bower_components/jquery/dist/jquery.js"></script>
+
+	<!-- add the code below for future JQuery widget functionality -->
+<!-- <script async src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script> -->
 </head>
 
 <body>
@@ -29,20 +47,17 @@
 			</ul>
 		</div><!-- list-view -->
 	</section><!-- list-container -->
-	
-	<div id="pip-pano"></div>
-	<div id="map-canvas" class="map" data-bind="click: $root.setLocation">
-		<!-- <button class="drop-btn" data-bind="click: drop" -->
-	</div><!-- map -->
+<!-- #pip-pano creates a streetview panorama -->
+<!-- 	<div id="pip-pano"></div> -->
 
-	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-	<!-- Google Maps Api and PLaces Library -->
-	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4k5Yie1sqInqZrBrWgubWKRaCBO2x6l8&libraries=places&callback=initMap" onerror="googleError()"></script>
-	<script src="js/view/Mapster.js"></script>
-	<script src="js/view/map-options.js"></script>
-	<script src="bower_components/knockout/dist/knockout.js"></script>
-	<script src="js/view/jqueryui.mapster.js"></script>
+	<!-- The Goodle Map Canvas -->
+	<div id="map-canvas" class="map" data-bind="click: $root.setLocation"></div><!-- map -->
+
+	
+	<script async src="js/view/Mapster.js"></script>
+	<script async src="js/view/map-options.js"></script>
+	<script async src="bower_components/knockout/dist/knockout.js"></script>
+<!-- <script async src="js/view/jqueryui.mapster.js"></script> -->
 	<script src="js/view/app.js"></script>
 	
 </body>

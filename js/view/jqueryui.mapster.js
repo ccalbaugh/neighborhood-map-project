@@ -1,5 +1,7 @@
-(function(window, Mapster) {
+// FOR future use on the app, not currently functional
 
+(function(global, Mapster, $) {
+	//   Namespace 
 	$.widget( "mapster.mapster", {
       // default options
       options: { },
@@ -87,4 +89,5 @@
       }
     });
 
-}(window, Mapster))
+}(this, this.Mapster || (this.Mapster = {}), this.jQuery))
+// Mapster abstracts google out so no need to pass in google to the namespace

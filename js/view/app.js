@@ -1,4 +1,4 @@
-(function(window, mapster, $) {
+(function(global, mapster, $) {
 
 	var places = [
 		{
@@ -6,7 +6,7 @@
 			id: 'ChIJSyeNzu9B5IcRQzciSCOPPuk',  // A Google Places ID.
 			formatted_address: '221 E Washington St, Iowa City, IA 52240',
 			// latLng: {lat: 41.659794, lng: -91.532322},
-			marker: ""
+			marker: "",
 			lat: 41.659794,
 			lng: -91.532322
 		},
@@ -67,16 +67,7 @@
 		this.marker = ko.observable(0);
 	};
 
-	function initMap() {
-		var options = mapster.MAP_OPTIONS,
-		element = document.querySelector('#map-canvas'),
-		map = mapster.create(element, options);
-		map.zoom(16);
-
-		service = new google.maps.places.PlacesService(map);
-
-		ko.applyBindings( new ViewModel() );
-	}
+	
 
 	var ViewModel = function() {
 		var self = this;
@@ -109,11 +100,53 @@
 			}	
 		}
 
-		// JQuery Map Widget Code
-		var $mapster = $('#map-canvas').mapster(Mapster.MAP_OPTIONS),
-			geocoder = new google.maps.Geocoder();
+////////// JQuery Map Widget Code
+		// var $mapster = $('#map-canvas').mapster(Mapster.MAP_OPTIONS),
+		// 	geocoder = new google.maps.Geocoder();
 
-		// This used HTML 5 Geolocation, which returns a currentLocation obj that provides a lat and lng,
+
+
+		// $mapster.mapster('getCurrentPosition', function(position) {
+		// 	$mapster.mapster('addMarker', {
+		// 		lat: position.coords.latitude,
+		// 		lng: position.coords.longitude
+		// 	});
+		// });	
+
+		// var matches = $mapster.mapster('findMarkers', function(marker) {
+		// 	return marker.id === 'ChIJUQ219u5B5IcRBOsWmmNQJnk';
+		// });
+
+		// $mapster.mapster('addMarker', {
+
+		// });
+
+		// $mapster.mapster('removeMarkers', function(marker) {
+		// 	return marker.id === 'ChIJMWk1KPBB5IcRXC6hLJYE0Uo';
+		// });
+
+		// $mapster.mapster('setPano', '#pip-pano', {
+		// 	position: {
+
+		// 	},
+			// pov: {
+			// 	heading: 0,
+			// 	pitch: 0
+			// },
+		// 	events: [{
+		// 		name: 'position_changed',
+		// 		callback: function() {
+		// 			alert('changed');
+		// 		}
+		// 	}, {
+		// 		name: 'links_changed',
+		// 		callback: function(e, panorama) {
+		// 			console.log(panorama.getLinks());
+		// 		}
+		// 	}]
+		// });
+
+////////// This used HTML 5 Geolocation, which returns a currentLocation obj that provides a lat and lng,
 		// First thing to do is check the navigator obj for HTML 5 Geolocation
 		// if (navigator.geolocation) {
 		// 	navigator.geolocation.getCurrentPosition(function(position) {
@@ -124,90 +157,46 @@
 		// 	});
 		// }
 
-		$mapster.mapster('getCurrentPosition', function(position) {
-			$mapster.mapster('addMarker', {
-				lat: position.coords.latitude,
-				lng: position.coords.longitude
-			});
-		});	
-
-
-
-		var matches = $mapster.mapster('findMarkers', function(marker) {
-			return marker.id === 'ChIJUQ219u5B5IcRBOsWmmNQJnk';
-		});
-
-		$mapster.mapster('addMarker', {
-
-		});
-
-		$mapster.mapster('removeMarkers', function(marker) {
-			return marker.id === 'ChIJMWk1KPBB5IcRXC6hLJYE0Uo';
-		});
-
-		$mapster.mapster('setPano', '#pip-pano', {
-			position: {
-
-			},
-			// pov: {
-			// 	heading: 0,
-			// 	pitch: 0
-			// },
-			events: [{
-				name: 'position_changed',
-				callback: function() {
-					alert('changed');
-				}
-			}, {
-				name: 'links_changed',
-				callback: function(e, panorama) {
-					console.log(panorama.getLinks());
-				}
-			}]
-		});
-
-		// this is an asynchronous method so we have to provide a callback for any success or error
-		geocode({
-			address: 'Golden Gate Bridge, San Fransisco, CA',
-			success: function(resulkts) {
-				$mapster.mapster('addMarker', {
-					lat: result.geometry.location.lat(),
-					lng: result.geometry.location.lng()
-				})
-			},
-			error: function(status) {
-				console.error(status);
-			}
-		})
+////////// this is an asynchronous method so we have to provide a callback for any success or error
+		// geocode({
+		// 	address: 'Golden Gate Bridge, San Fransisco, CA',
+		// 	success: function(resulkts) {
+		// 		$mapster.mapster('addMarker', {
+		// 			lat: result.geometry.location.lat(),
+		// 			lng: result.geometry.location.lng()
+		// 		})
+		// 	},
+		// 	error: function(status) {
+		// 		console.error(status);
+		// 	}
+		// })
 
 		function addMarkerWithTimeout(place, timeout) {
 			setTimeout(function() {
-				// var marker = map.addMarker({
-				// 	lat: place.lat,
-				// 	lng: place.lng,
-				// 	events: [{
-				// 		name: 'click',
-				// 		callback: selectMarker(place, marker, place.infoWindow);
-				// 	}, {
-				// 		name: 'click',
-				// 		callback: selectMarker(place, marker, place.infoWindow);
-				// 	}],
-				//  content: '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
-		        //  			'Place ID: ' + place.id + '<br>' +
-		        //  			place.formatted_address + '</div>',
-				// 	icon: 'https://mapicons.mapsmarker.com/wp-content/uploads/mapicons/shape-default/color-128e4d/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/tree.png'
-				// });
-
-				place.marker = new google.maps.Marker({
-					position: {
-						place.lat,
-						place.lng
-					},
-					map: map,
+				var marker = map.addMarker({
+					lat: place.lat,
+					lng: place.lng,
+					events: [{
+						name: 'click',
+						callback: selectMarker(place, marker, place.infoWindow)
+					}],
+				 content: '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
+		         			'Place ID: ' + place.id + '<br>' +
+		         			place.formatted_address + '</div>',
 					icon: 'https://mapicons.mapsmarker.com/wp-content/uploads/mapicons/shape-default/color-128e4d/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/tree.png'
-					animation: google.maps.Animation.DROP,
-					title: place.title
-				});	
+				});
+
+//////////////////  OLD CODE
+				// place.marker = new google.maps.Marker({
+				// 	position: {
+				// 		lat: place.lat,
+				// 		lng: place.lng
+				// 	},
+				// 	map: map,
+				// 	icon: 'https://mapicons.mapsmarker.com/wp-content/uploads/mapicons/shape-default/color-128e4d/shapecolor-color/shadow-1/border-dark/symbolstyle-white/symbolshadowstyle-dark/gradient-no/tree.png',
+				// 	animation: google.maps.Animation.DROP,
+				// 	title: place.title
+				// });	
 
 				place.infoWindow = new google.maps.InfoWindow({
 					content: '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
@@ -283,5 +272,5 @@
 	// creates an alert if the Google Maps API can't be reached
 	function googleError() { alert("Sorry! Google Maps cannot be loaded"); }
 
-}(window, window.Mapster || (window.Mapster = {}), JQuery));
+}(this., this..Mapster || (this..Mapster = {}), this..jQuery));
 

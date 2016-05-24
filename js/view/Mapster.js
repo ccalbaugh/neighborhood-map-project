@@ -1,4 +1,4 @@
-(function(window, google, List) {
+(function(global, google, List) {
 
 	var Mapster = (function() {
 		function Mapster(element, opts) {
@@ -7,7 +7,7 @@
 			this.markers = List.create();
 
 			if (opts.geocoder) {
-				this.geocoder = new google.maps.Geocoder():
+				this.geocoder = new google.maps.Geocoder();
 			}			
 		}
 
@@ -26,19 +26,19 @@
 					opts.callback.call(self, e, opts.obj);
 				});
 			},
-
-			geocode: function(opts) {
-				geocoder.geocode({
-					address: opts.address
-				}, function(results, status) {
-					// this checks if the passed status matches an OK status within an Enum in the google maps nambespace
-					if (status === google.maps.GeocoderStatus.OK) {
-						opts.success.call(this, results, status);
-					} else {
-						opts.error.call(this, status);
-					}
-				});
-			},
+//////////////  For Geocode functionality
+			// geocode: function(opts) {
+			// 	geocoder.geocode({
+			// 		address: opts.address
+			// 	}, function(results, status) {
+			// 		// this checks if the passed status matches an OK status within an Enum in the google maps nambespace
+			// 		if (status === google.maps.GeocoderStatus.OK) {
+			// 			opts.success.call(this, results, status);
+			// 		} else {
+			// 			opts.error.call(this, status);
+			// 		}
+			// 	});
+			// },
 
 			getCurrentPosition: function(callback) {
 				if (navigator.geolocation) {
@@ -47,15 +47,16 @@
 					});
 				}
 			},
-
-			setPano: function(element, opts) {
-				var panorama = new google.maps.StreetViewPanorama(element, opts);
-				if (opts.events) {
-					this._attachEvents(panorama, opts.events);
-				}
+//////////////  For Future functionality with the StreetView Panorama
+			// setPano: function(element, opts) {
+			// 	var panorama = new google.maps.StreetViewPanorama(element, opts);
+			// 	if (opts.events) {
+			// 		this._attachEvents(panorama, opts.events);
+			// 	}
 				
-				this.gMap.setStreetView(panorama);
-			},
+			// 	this.gMap.setStreetView(panorama);
+			// },
+			
 			// all other Marker options are created in app.js where the markers are actually instantiatied
 			addMarker: function(opts) {
 				// marker is added here due to hoisting
@@ -78,7 +79,7 @@
 					this._on({
 						obj: marker,
 						event: 'click',
-						callback: selectMarker(place, marker, place.infoWindow);
+						callback: selectMarker(place, marker, place.infoWindow)
 
 					//  callback: function() {
 					// 		var infoWindow = new google.maps.infoWindow({
@@ -120,7 +121,7 @@
 				});
 			},
 
-			_createMarker: function(location) {
+			_createMarker: function(opts) {
 				opts.map = this.gMap;
 				return new google.maps.Marker(opts);
 			},
@@ -135,4 +136,4 @@
 
 	window.Mapster = Mapster;
 
-}(window, google, List))
+}(this, this.google, this.List))

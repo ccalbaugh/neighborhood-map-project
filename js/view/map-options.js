@@ -1,4 +1,4 @@
-(function(window, google, mapster) {
+(function(global, google, mapster) {
 
 	var styles = [{
 		featureType: 'all',
@@ -48,12 +48,13 @@
 
 	mapster.MAP_OPTIONS = {
 			center: {lat: 41.659794, lng: -91.532322},
+			zoom: 16,
 			disableDefaultUI: true,
 			scrollwheel: false,
 			draggable: false,
-			mapTypeId: google.maps.MapTpyeId.ROADMAP,
+			// mapTypeId: google.maps.MapTypeId.ROADMAP,
 			geocoder: true,
 			styles: styles
 	};
 
-}(window, google, window.Mapster || (window.Mapster = {})))
+}(this, this.google, this.Mapster || (this.Mapster = {})))

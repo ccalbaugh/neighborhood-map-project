@@ -14,21 +14,19 @@ ul {
 	list-style-type: none;
 }
 
-.map {
+/*.map {
 	height: 100%;
 	background-color: #ccc;
-	padding-bottom: 75%;
+	padding-bottom: 50%;
 	right: 0;
 	top: 0;
-}
+}*/
 
-#pip-pano {
-	height: 200px;
-	width: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 1;
+#map-canvas {
+    width: 760px;
+    height: 620px;
+    background-color: #ccc;
+    display: block;
 }
 
 .search-container {
@@ -77,6 +75,19 @@ ul {
 
 .infoWindow strong {
 	font-size: 24px;
+	color: goldenrod;
+}
+
+#topLink {
+    display: none;
+}
+
+#copy {
+    margin-top: 10px;
+    font-size: 25px;
+    font-family: 'Josefin Slab', serif;
+    font-weight: 400;
+    color: crimson;
 }
 
 

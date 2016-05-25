@@ -67,8 +67,6 @@
 		this.marker = ko.observable(0);
 	};
 
-	
-
 	var ViewModel = function() {
 		var self = this;
 
@@ -100,51 +98,9 @@
 			}	
 		}
 
-////////// JQuery Map Widget Code
 		// var $mapster = $('#map-canvas').mapster(Mapster.MAP_OPTIONS),
 		// 	geocoder = new google.maps.Geocoder();
 
-
-
-		// $mapster.mapster('getCurrentPosition', function(position) {
-		// 	$mapster.mapster('addMarker', {
-		// 		lat: position.coords.latitude,
-		// 		lng: position.coords.longitude
-		// 	});
-		// });	
-
-		// var matches = $mapster.mapster('findMarkers', function(marker) {
-		// 	return marker.id === 'ChIJUQ219u5B5IcRBOsWmmNQJnk';
-		// });
-
-		// $mapster.mapster('addMarker', {
-
-		// });
-
-		// $mapster.mapster('removeMarkers', function(marker) {
-		// 	return marker.id === 'ChIJMWk1KPBB5IcRXC6hLJYE0Uo';
-		// });
-
-		// $mapster.mapster('setPano', '#pip-pano', {
-		// 	position: {
-
-		// 	},
-			// pov: {
-			// 	heading: 0,
-			// 	pitch: 0
-			// },
-		// 	events: [{
-		// 		name: 'position_changed',
-		// 		callback: function() {
-		// 			alert('changed');
-		// 		}
-		// 	}, {
-		// 		name: 'links_changed',
-		// 		callback: function(e, panorama) {
-		// 			console.log(panorama.getLinks());
-		// 		}
-		// 	}]
-		// });
 
 ////////// This used HTML 5 Geolocation, which returns a currentLocation obj that provides a lat and lng,
 		// First thing to do is check the navigator obj for HTML 5 Geolocation
@@ -269,8 +225,10 @@
 		};
 	};
 
+	initMap(mapster);
+
 	// creates an alert if the Google Maps API can't be reached
 	function googleError() { alert("Sorry! Google Maps cannot be loaded"); }
 
-}(this., this..Mapster || (this..Mapster = {}), this..jQuery));
+}(this, this.Mapster || (this.Mapster = {}), this.jQuery));
 

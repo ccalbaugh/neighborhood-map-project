@@ -86,7 +86,7 @@ var ViewModel = function() {
 	self.allPlaces = ko.observableArray(places);
 
 	places.forEach(function(place) {
-		self.allPlaces.push(place);
+		self.allPlaces().push(place);
 	});
 
 	console.log(self.allPlaces);
@@ -96,23 +96,34 @@ var ViewModel = function() {
 		self.currentLocation(clickedLocation);
 	};
 
-	function drop() {
-		for (var i = 0; i < self.allPlaces().length; i++) {
-			addMarker(self.allPlaces()[i], i * 400);
-		}	
-	}
+	// function drop() {
+	// 	for (var i = 0; i < self.allPlaces().length; i++) {
+	// 		addMarker(self.allPlaces()[i], i * 400);
+	// 	}	
+	// }
 
-	function addMarker(place, timeout) {
-		setTimeout(function() {
-			place.marker = new google.maps.Marker({
-				map: map,
-				position: place.latLng,
-				title: place.title,
-				animation: google.maps.Animation.DROP
-			});	
+	self.allPlaces().forEach(function(place) {
+		place.marker = new google.maps.Marker({
+			map: map,
+			position: place.latLng,
+			title: place.title,
+			animation: google.maps.Animation.DROP
+		});	
 
-			console.log(place.lat + place.lng);
+		place.marker.addListener('click', toggleBounce);
 
+		function toggleBounce(marker) {
+			if (marker.getAnimation() !== null) {
+				setTimeout(function() { marker.setAnimation(null); }, 1500);
+			} else {
+				// Sets the marker to bounce twice and then stop, thanks to Simon Steinberger on stackoverflow for the solution
+				marker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function() { marker.setAnimation(null); }, 1500);
+				self.setLocation(marker);
+			}
+		}
+
+		google.maps.event.addListener(place.marker, 'click', function() {
 			if (!place.infoWindow) {
 				place.infoWindow = new google.maps.InfoWindow();
 			}
@@ -162,72 +173,57 @@ var ViewModel = function() {
 					place.infoWindow.setContent(content);
 				})
 			}); // end of ajax call		
-
-			google.maps.event.addListener(place.marker, 'click', selectMarker(place, place.marker, place.infoWindow));
-
-		}, timeout);
-	}
-
-	// run drop() after the map is idle, which should signifiy that it is fully loaded
-	google.maps.event.addListenerOnce(map, 'idle', drop);
-
-  	var lastInfoWindow = null;
-
-	function selectMarker(place, marker, infoWindow) {
-		function toggleBounce(marker) {
-			if (marker.getAnimation() !== null) {
-				setTimeout(function() { marker.setAnimation(null); }, 1500);
-			} else {
-				// Sets the marker to bounce twice and then stop, thanks to Simon Steinberger on stackoverflow for the solution
-				marker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function() { marker.setAnimation(null); }, 1500);
-				self.setLocation(marker);
-			}
-		};
+		});
 		
-		return function() {
+		google.maps.event.addListener(place.marker, 'click', function() {
+			var lastInfoWindow = null;
 
-			if (lastInfoWindow === infoWindow) {
-				toggleBounce(marker);
-				currentLocation = null;
-				infoWindow.close(map, this);
-				lastInfoWindow = null;
-			} else {
+			return function() {
 
-				if (lastInfoWindow !== null) {
-					lastInfoWindow.close(map, this);
+				if (lastInfoWindow === infoWindow) {
 					toggleBounce(marker);
+					currentLocation = null;
+					infoWindow.close(map, this);
+					lastInfoWindow = null;
+				} else {
+
+					if (lastInfoWindow !== null) {
+						lastInfoWindow.close(map, this);
+						toggleBounce(marker);
+					}
+
+				toggleBounce(marker);	
+		        infoWindow.open(map, this);
+				lastInfoWindow = infoWindow;
+
+				map.panTo(place.latLng);
 				}
+			};
+		});
+	}); // End of the forEach loop
 
-			toggleBounce(marker);	
-	        infoWindow.open(map, this);
-			lastInfoWindow = infoWindow;
+	// // run drop() after the map is idle, which should signifiy that it is fully loaded
+	// google.maps.event.addListenerOnce(map, 'idle', drop);
 
-			map.panTo(place.latLng);
-			}
-		}
-	}
 	// animates the correct marker
-	self.list = function(place, marker) {
-		google.maps.event.trigger(place.marker, 'click');
-	};
+	self.list = function (place, marker) {
+        google.maps.event.trigger(place.marker, 'click'); 
+    };
     // used for Search functionality with local names
 	self.userInput = ko.observable('');
 
 	self.searchResults = ko.computed(function() {
-		return ko.utils.arrayFilter(self.allPlaces(), function(place) {
-			var listFilter = place.title.toLowerCase().indexOf(self.userInput().toLowerCase()) !== -1;
+		return ko.utils.arrayFilter(self.allPlaces(), function(list) {
+			var listFilter = list.title.toLowerCase().indexOf(self.userInput().toLowerCase()) !== -1;
 			if (listFilter) {
-				place.marker.setVisible(true);
+				list.marker.setVisible(true);
 			} else {
-				place.marker.setVisible(false);
+				list.marker.setVisible(false);
 			}
 
 			return listFilter;
 		});
-	});
-
-	
+	});	
 };
 
 // Where the google Map is created
@@ -243,7 +239,6 @@ function initMap() {
 
 	element = document.querySelector('#map-canvas');
 	map = new google.maps.Map(element, options);
-	service = new google.maps.places.PlacesService(map);
 
 	ko.applyBindings( new ViewModel() );
 }

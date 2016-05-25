@@ -13,18 +13,6 @@
 	<!-- Google Maps Api and PLaces Library -->
 	<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD4k5Yie1sqInqZrBrWgubWKRaCBO2x6l8&libraries=places&callback=initMap" onerror="googleError()"></script>
 
-	<script>
-		function initMap() {
-			var options = mapster.MAP_OPTIONS,
-			element = document.querySelector('#map-canvas'),
-			map = mapster.create(element, options);
-
-			service = new google.maps.places.PlacesService(map);
-
-			ko.applyBindings( new ViewModel() );
-		}
-	</script>
-
 	<script async src="bower_components/jquery/dist/jquery.js"></script>
 
 	<!-- add the code below for future JQuery widget functionality -->
@@ -47,15 +35,10 @@
 			</ul>
 		</div><!-- list-view -->
 	</section><!-- list-container -->
-<!-- #pip-pano creates a streetview panorama -->
-<!-- 	<div id="pip-pano"></div> -->
 
 	<!-- The Goodle Map Canvas -->
 	<div id="map-canvas" class="map" data-bind="click: $root.setLocation"></div><!-- map -->
 
-	
-	<script async src="js/view/Mapster.js"></script>
-	<script async src="js/view/map-options.js"></script>
 	<script async src="bower_components/knockout/dist/knockout.js"></script>
 	<script src="js/view/app.js"></script>
 	

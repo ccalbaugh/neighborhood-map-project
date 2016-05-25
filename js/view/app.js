@@ -67,6 +67,16 @@
 		this.marker = ko.observable(0);
 	};
 
+	function initMap() {
+		var options = mapster.MAP_OPTIONS,
+		element = document.querySelector('#map-canvas'),
+		map = mapster.create(element, options);
+
+		service = new google.maps.places.PlacesService(map);
+
+		ko.applyBindings( new ViewModel() );
+	}
+
 	var ViewModel = function() {
 		var self = this;
 
@@ -97,35 +107,6 @@
 				addMarkerWithTimeout(self.visiblePlaces()[i], i * 400);
 			}	
 		}
-
-		// var $mapster = $('#map-canvas').mapster(Mapster.MAP_OPTIONS),
-		// 	geocoder = new google.maps.Geocoder();
-
-
-////////// This used HTML 5 Geolocation, which returns a currentLocation obj that provides a lat and lng,
-		// First thing to do is check the navigator obj for HTML 5 Geolocation
-		// if (navigator.geolocation) {
-		// 	navigator.geolocation.getCurrentPosition(function(position) {
-		// 		$mapster.mapster('addMarker', {
-		// 			lat: position.coords.latitude,
-		// 			lng: position.coords.longitude
-		// 		});
-		// 	});
-		// }
-
-////////// this is an asynchronous method so we have to provide a callback for any success or error
-		// geocode({
-		// 	address: 'Golden Gate Bridge, San Fransisco, CA',
-		// 	success: function(resulkts) {
-		// 		$mapster.mapster('addMarker', {
-		// 			lat: result.geometry.location.lat(),
-		// 			lng: result.geometry.location.lng()
-		// 		})
-		// 	},
-		// 	error: function(status) {
-		// 		console.error(status);
-		// 	}
-		// })
 
 		function addMarkerWithTimeout(place, timeout) {
 			setTimeout(function() {

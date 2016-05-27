@@ -2,7 +2,7 @@
 
 var places = [
 	{
-		title: 'The Englert Theater',
+		title: 'Englert Theatre',
 		id: 'ChIJSyeNzu9B5IcRQzciSCOPPuk',  // A Google Places ID.
 		formatted_address: '221 E Washington St, Iowa City, IA 52240',
 		latLng: {lat: 41.659794, lng: -91.532322},
@@ -25,8 +25,8 @@ var places = [
 		id: 'ChIJgxklQ-5B5IcRjdC81k4t4ug',  // A Google Places id.
 		formatted_address: '110 E College St, Iowa City, IA 52240',
 		latLng: {lat: 41.659075, lng: -91.534083},
-		lat: 41.659794,
-		lng: -91.532322,
+		lat: 41.659075,
+		lng: -91.534083,
 		url: ""
 	}, 
 	{
@@ -34,8 +34,8 @@ var places = [
 		id: 'ChIJEactIO5B5IcRJ6QdjEyd_UI',  // A Google Places id.
 		formatted_address: '18 S Clinton St, Iowa City, IA 52240',
 		latLng: {lat: 41.660629, lng: -91.534355},
-		lat: 41.659794,
-		lng: -91.532322,
+		lat: 41.660629,
+		lng: -91.534355,
 		url: ""
 	}, 
 	{
@@ -43,8 +43,8 @@ var places = [
 		id: 'ChIJ9WOyRe5B5IcRgFg8TDssBz8',  // A Google Places id.
 		formatted_address: '118 E College St, Iowa City, IA 52240',
 		latLng: {lat: 41.659283, lng: -91.533779},
-		lat: 41.659794,
-		lng: -91.532322,
+		lat: 41.659283,
+		lng: -91.533779,
 		url: ""
 	},
 	{
@@ -67,6 +67,7 @@ var places = [
 	},
 ];
 
+var lastInfoWindow = null;
 
 var ViewModel = function() {
 	var self = this;
@@ -89,6 +90,17 @@ var ViewModel = function() {
 		self.currentLocation(clickedLocation);
 	};
 
+	self.toggleBounce = function(marker) {
+		if (marker.getAnimation() !== null) {
+			setTimeout(function() { marker.setAnimation(null); }, 750);
+		} else {
+			
+			marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function() { marker.setAnimation(null); }, 750);
+			self.setLocation(marker);
+		}
+	};
+
 	self.allPlaces().forEach(function(place) {
 		marker = new google.maps.Marker({
 			map: map,
@@ -97,22 +109,13 @@ var ViewModel = function() {
 			animation: google.maps.Animation.DROP
 		});
 
-		place.marker = marker;	
 
-		function toggleBounce(marker) {
-			if (marker.getAnimation() !== null) {
-				setTimeout(function() { marker.setAnimation(null); }, 750);
-			} else {
-				
-				marker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function() { marker.setAnimation(null); }, 750);
-				self.setLocation(marker);
-			}
-		}
+		place.marker = marker;	
 
 		google.maps.event.addListener(place.marker, 'click', function() {
 			place.infoWindow = new google.maps.InfoWindow();
-			
+			self.toggleBounce(place.marker);
+			map.panTo(place.latLng);
 
 			// Initialize the vars for the Wikipedia API, thanks to Cshields88 on Github for the api layout
 			var content,
@@ -133,12 +136,12 @@ var ViewModel = function() {
 					console.log(response);
 					if (articleList.length > 0) {
 						for (var i = 0; i < articleList.length; i++) {
-							var url = 'http://en.wikipedia.org/wiki/' + articleList[i];
+							var url = response[3]; // response[3] gives back the wiki URL
 							content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 										'<p>' + place.formatted_address + '</p>' +
 										'<p>' + response[2] + '</p>' + // response[2] for more modern response
-										'<a href="' + place.url + '" target="_blank">' +
-										place.url + '</a>' + 
+										'<p>' + '<a href="' + url + '" target="_blank">' +
+										"View full Wikipedia article" + '</a>' + '</p>' +
 							'</div>';
 							place.infoWindow.setContent(content);
 						}
@@ -149,28 +152,6 @@ var ViewModel = function() {
 						'</div>';
 						place.infoWindow.setContent(content);
 					}
-					place.infoWindow.open(map, this);
-
-					var lastInfoWindow = null;
-					if (lastInfoWindow === place.infoWindow) {
-						toggleBounce(place.marker);
-						currentLocation = null;
-						place.infoWindow.close(map, this);
-						lastInfoWindow = null;
-					} else {
-
-						if (lastInfoWindow !== null) {
-							lastInfoWindow.close(map, this);
-							toggleBounce(place.marker);
-						}
-
-					
-			        place.infoWindow.open(map, this);
-					lastInfoWindow = place.infoWindow;
-					toggleBounce(place.marker);	
-					map.panTo(place.latLng);
-					}
-					
 				},
 				error: (function () {
 					content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
@@ -180,7 +161,22 @@ var ViewModel = function() {
 					place.infoWindow.setContent(content);
 				}),
 			}); // end of ajax call	
-//////////////FIX THIS PART!!!! IT WONT OPEN AN INFO WINDOW RIGHT NOW
+			// if another infoWindow is open, then close it and open the new one
+			// otherwise if you click on the same marker twice, just close the infoWindow
+			if (lastInfoWindow === place.infoWindow) {
+				currentLocation = null;
+				place.infoWindow.close(map, this);
+				lastInfoWindow = null;
+			} else {
+
+				if (lastInfoWindow !== null) {
+					lastInfoWindow.close(map, this);
+				}
+
+			place.infoWindow.open(map, this);
+			lastInfoWindow = place.infoWindow;	
+			
+			}
 		});	
 	}); // End of the forEach loop
 
@@ -193,6 +189,7 @@ var ViewModel = function() {
 
 	self.searchResults = ko.computed(function() {
 		return ko.utils.arrayFilter(self.allPlaces(), function(list) {
+			console.log(list);
 			var listFilter = list.title.toLowerCase().indexOf(self.userInput().toLowerCase()) >= 0;
 			if (listFilter) {
 				list.marker.setVisible(true);

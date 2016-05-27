@@ -3,12 +3,14 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Neighborhood Map | FEND Projects</title>
+	<title>Top 10 US National Parks | FEND Projects</title>
 	<!-- minimum-scale prevents the user from viewing overflow from the body that should be hidden -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
+	
 	<link rel="stylesheet" type="text/css" href="node_modules/normalize.css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -17,32 +19,36 @@
 
 <body>
 	<a id="top"></a>
-	<div class="row">
-        <div class="col-xs-12 text-center">
-            <h1 class="heading">FEND | Neighborhood Map</h1>
-        </div>
-    </div>
+	<div class="container">
+		<div class="row">
+	        <div class="col-xs-12 text-center">
+				<!-- as per travel.nationalgeographic.com -->        
+	            <h1 class="heading">Top 10 U.S. National Park LandMarks</h1>
+	        </div>
+	    </div>
 
-	<section class="search-container">
-		<div class="searchBar-tag">Search</div>
-		<div class="search-bar">
-			<input type="search" id="place-id" class="search-input" placeholder="Search" data-bind="text: userInput, keyup: searchResults" />
-		</div><!-- search-bar -->
-	</section><!-- search-container -->
+		<div class="row">
+			<div class="col-lg-4 col-xs-12">
+				<input type="search" id="search" class="search-input" placeholder="Search" data-bind="value: userInput, valueUpdate: 'keyup'" />
 
-	<section class="list-container">
-		<div id="list-view" class="list-view">
-			<ul id="name-list" data-bind="foreach: searchResults">
-				<li class="list-elem" data-bind="text: title, click: $root.list"></li>
-			</ul>
-		</div><!-- list-view -->
-	</section><!-- list-container -->
+				<section class="list-container">
+					<div id="list-view" class="list-view">
+						<ul id="list-group" data-bind="foreach: searchResults">
+							<li class="list-group-item col-xs-6 col-md-12" data-bind="text: title, click: $root.list"></li>
+						</ul>
+					</div><!-- list-view -->
+				</section><!-- list-container -->
+			</div><!-- col-lg-4 col-xs-12 -->	
 
-	<!-- The Goodle Map Canvas -->
-	<div id="map-canvas" class="col-12-xs text-center" data-bind="click: currentLocation"></div><!-- map-canvas -->
+			<!-- The Goodle Map Canvas -->
+			<div id="map-canvas" class="col-sm-8 col-xs-8 img-responsive" data-bind="click: currentLocation"></div><!-- map-canvas -->
 
-	<div id="copy" class="col-xs-12 text-center">&copy; 2016 | Caden Albaugh</div><!-- copy -->
-	<div id="topLink" class="col-12-xs text-center"><a href="#top">Back To Top</a></div><!-- topLink -->
+			<div id="copy" class="col-xs-12 text-center">&copy; 2016 | Caden Albaugh</div><!-- copy -->
+			<div id="topLink" class="col-12-xs text-center"><a href="#top">Back To Top</a></div><!-- topLink -->
+		</div><!-- row -->
+
+		
+	</div><!-- container -->
 
 	
 

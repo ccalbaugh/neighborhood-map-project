@@ -2,69 +2,75 @@
 
 var places = [
 	{
-		title: 'Englert Theatre',
-		id: 'ChIJSyeNzu9B5IcRQzciSCOPPuk',  // A Google Places ID.
-		formatted_address: '221 E Washington St, Iowa City, IA 52240',
-		latLng: {lat: 41.659794, lng: -91.532322},
-		marker: "",
-		lat: 41.659794,
-		lng: -91.532322,
-		url: ""
+		title: 'Cape Royal',
+		formatted_address: 'Grand Canyon National Park, Coconino County, AZ',
+		latLng: {lat: 36.116909, lng: -111.950005},
+		lat: 36.116909,
+		lng: -111.950005
 	},
 	{
-		title: 'Basta Pizzeria Ristorante',
-		id: 'ChIJn6fO2fFB5IcR6jVX9EN9K6A',  // A Google Places id.
-		formatted_address: '121 Iowa Ave, Iowa City, IA 52240',
-		latLng: {lat: 41.661022, lng: -91.533625},
-		lat: 41.661022,
-		lng: -91.533625,
-		url: ""
+		title: 'Half Dome',
+		formatted_address: 'Yosemite National Park, Mariposa County, CA',
+		latLng: {lat: 37.746020, lng: -119.533457},
+		lat: 37.746020,
+		lng: -119.533457
 	},
 	{
-		title: 'Donnellys Irish Pub',
-		id: 'ChIJgxklQ-5B5IcRjdC81k4t4ug',  // A Google Places id.
-		formatted_address: '110 E College St, Iowa City, IA 52240',
-		latLng: {lat: 41.659075, lng: -91.534083},
-		lat: 41.659075,
-		lng: -91.534083,
-		url: ""
+		title: 'Denali',
+		formatted_address: 'Denali National Park and Preserve, AK',
+		latLng: {lat: 63.069547, lng: -151.005775},
+		lat: 63.069547,
+		lng: -151.005775
 	}, 
 	{
-		title: 'Shorts Burger & Shine',
-		id: 'ChIJEactIO5B5IcRJ6QdjEyd_UI',  // A Google Places id.
-		formatted_address: '18 S Clinton St, Iowa City, IA 52240',
-		latLng: {lat: 41.660629, lng: -91.534355},
-		lat: 41.660629,
-		lng: -91.534355,
-		url: ""
+		title: 'Grand Teton',
+		formatted_address: 'Grand Teton National Park, Teton County, WY',
+		latLng: {lat: 43.741010, lng: -110.802350},
+		lat: 43.741010,
+		lng: -110.802350
 	}, 
 	{
-		title: 'FilmScene',
-		id: 'ChIJ9WOyRe5B5IcRgFg8TDssBz8',  // A Google Places id.
-		formatted_address: '118 E College St, Iowa City, IA 52240',
-		latLng: {lat: 41.659283, lng: -91.533779},
-		lat: 41.659283,
-		lng: -91.533779,
-		url: ""
+		title: 'Mount Rainier',
+		formatted_address: 'Mount Rainier National Park, Pierce County, WA',
+		latLng: {lat: 46.852395, lng: -121.760237},
+		lat: 46.852395,
+		lng: -121.760237
 	},
 	{
-		title: 'Blue Moose Inc',
-		id: 'ChIJMWk1KPBB5IcRXC6hLJYE0Uo',  // A Google Places id.
-		formatted_address: '211 Iowa Ave, Iowa City, IA 52240',
-		latLng: {lat: 41.661003, lng: -91.532341},
-		lat: 41.661003,
-		lng: -91.533541,
-		url: ""
+		title: 'Cumberland Gap National Historical Park',
+		formatted_address: 'Cumberland Gap National Historical Park, Middlesboro, KY',
+		latLng: {lat: 36.603718, lng: -83.698440},
+		lat: 36.603718,
+		lng: -83.698440
 	},
 	{
-		title: 'The Mill Restaurant',
-		id: 'ChIJUQ219u5B5IcRBOsWmmNQJnk',  // A Google Places id.
-		formatted_address: '120 E Burlington St, Iowa City, IA 52240',
-		latLng: {lat: 41.658244, lng: -91.533651},
-		lat: 41.658244,
-		lng: -91.533651,
-		url: ""
+		title: 'Chimney Rock',
+		formatted_address: 'Chimney Rock National Historic Site, Chimney Rock Trail, Bayard, NE',
+		latLng: {lat: 41.702858, lng: -103.348074},
+		lat: 41.702858,
+		lng: -103.348074
 	},
+	{
+		title: 'Devils Tower National Monument',
+		formatted_address: 'Devils Tower National Monument, Wyoming 110, Devils Tower, WY',
+		latLng: {lat: 44.590202, lng: -104.714681},
+		lat: 44.590202,
+		lng: -104.714681
+	},
+	{
+		title: 'Island in the Sky',
+		formatted_address: 'Canyonlands National Park, San Juan County, UT',
+		latLng: {lat: 38.397340, lng: -109.889610},
+		lat: 38.397340,
+		lng: -109.889610
+	},
+	{
+		title: 'Bering Land Bridge National Preserve',
+		formatted_address: 'Bering Land Bridge National Park and Preserve, Shishmaref, AK',
+		latLng: {lat: 65.925871, lng: -164.437852},
+		lat: 65.925871,
+		lng: -164.437852
+	}
 ];
 
 var lastInfoWindow = null;
@@ -130,6 +136,7 @@ var ViewModel = function() {
 			$.ajax({
 				url: wikiURL,
 				dataType: "jsonp",
+				Allimages: name,
 				success: function(response) {
 					clearTimeout(self.apiTimeout);
 					var articleList = response[1];
@@ -178,12 +185,15 @@ var ViewModel = function() {
 			
 			}
 		});	
+
+		return place.infoWindow;
 	}); // End of the forEach loop
 
-	// animates the correct marker
+	// links list to the allPlaces marker info
 	self.list = function (place, marker) {
         google.maps.event.trigger(place.marker, 'click'); 
     };
+
     // used for Search functionality with local names
 	self.userInput = ko.observable('');
 
@@ -205,11 +215,11 @@ var ViewModel = function() {
 // Where the google Map is created
 function initMap() {
 	options = {
-			center: {lat: 41.659794, lng: -91.532322},
-			zoom: 16,
+			center: {lat: 46.879116, lng: -113.996196}, // Missoula, MT
+			zoom: 3,
 			disableDefaultUI: false,
 			scrollwheel: false,
-			draggable: false,
+			draggable: true,
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
 
@@ -224,4 +234,3 @@ function googleError(e) {
 	alert("Sorry! Google Maps cannot be loaded at this time");
 	console.log(e);
 }
-

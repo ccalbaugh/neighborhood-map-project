@@ -1,6 +1,6 @@
 * {
 	box-sizing: border-box;
-	border: 1px solid blue;
+	/*border: 1px solid blue;*/
 }
 
 html, body {
@@ -14,57 +14,31 @@ ul {
 	list-style-type: none;
 }
 
-/*.map {
-	height: 100%;
-	background-color: #ccc;
-	padding-bottom: 50%;
-	right: 0;
-	top: 0;
-}*/
-
 #map-canvas {
     width: 760px;
     height: 620px;
     background-color: #ccc;
     display: block;
-}
-
-.search-container {
-	display: flex;
-	width: 100%;
-}
-
-.searchBar-tag {
-	display: flex;
-	width: 25%;
+    border: 1px solid #b5b5b5;
 }
 
 .search-input {
-	display: flex;
-	width: 75%;
+	width: 100%;
 }
 
-.list-container {
-	float: left;
-	width: 30%;
-	align-content: left;
-	overflow: none;
-	margin-right: 3%;
-}
-
-.list-elem {
+.list-group-item {
 	display: block;
 	padding: 0.3em 0;
 	border: 1px solid #e5e5e5;
 }
 
-.list-elem:hover {
+.list-group-item:hover {
 	cursor: pointer;
 	background-color: #bbb;
 	font-size: 110%;
 }
 
-.list-elem:active {
+.list-group-item:active {
 	background-color: #bbb;
 }
 
@@ -87,7 +61,7 @@ ul {
     font-size: 25px;
     font-family: 'Josefin Slab', serif;
     font-weight: 400;
-    color: crimson;
+    color: goldenrod;
 }
 
 

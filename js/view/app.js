@@ -71,7 +71,7 @@ var places = [
 var ViewModel = function() {
 	var self = this;
 
-	var placeInfo = function(data) {
+	var PlaceMaker = function(data) {
 		self.title = ko.observable(data.title);
 		self.address = ko.observable(data.address);
 		self.lat = ko.observable(data.lat);
@@ -85,48 +85,34 @@ var ViewModel = function() {
 	self.currentLocation = ko.observable();
 	self.allPlaces = ko.observableArray(places);
 
-	places.forEach(function(place) {
-		self.allPlaces().push(place);
-	});
-
-	console.log(self.allPlaces);
-	console.log('***' + self.allPlaces());
-
 	self.setLocation = function(clickedLocation) {
 		self.currentLocation(clickedLocation);
 	};
 
-	// function drop() {
-	// 	for (var i = 0; i < self.allPlaces().length; i++) {
-	// 		addMarker(self.allPlaces()[i], i * 400);
-	// 	}	
-	// }
-
 	self.allPlaces().forEach(function(place) {
-		place.marker = new google.maps.Marker({
+		marker = new google.maps.Marker({
 			map: map,
 			position: place.latLng,
 			title: place.title,
 			animation: google.maps.Animation.DROP
-		});	
+		});
 
-		place.marker.addListener('click', toggleBounce);
+		place.marker = marker;	
 
 		function toggleBounce(marker) {
 			if (marker.getAnimation() !== null) {
-				setTimeout(function() { marker.setAnimation(null); }, 1500);
+				setTimeout(function() { marker.setAnimation(null); }, 750);
 			} else {
-				// Sets the marker to bounce twice and then stop, thanks to Simon Steinberger on stackoverflow for the solution
+				
 				marker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function() { marker.setAnimation(null); }, 1500);
+				setTimeout(function() { marker.setAnimation(null); }, 750);
 				self.setLocation(marker);
 			}
 		}
 
 		google.maps.event.addListener(place.marker, 'click', function() {
-			if (!place.infoWindow) {
-				place.infoWindow = new google.maps.InfoWindow();
-			}
+			place.infoWindow = new google.maps.InfoWindow();
+			
 
 			// Initialize the vars for the Wikipedia API, thanks to Cshields88 on Github for the api layout
 			var content,
@@ -147,8 +133,7 @@ var ViewModel = function() {
 					console.log(response);
 					if (articleList.length > 0) {
 						for (var i = 0; i < articleList.length; i++) {
-							var articleStr = articleList[i];
-							var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+							var url = 'http://en.wikipedia.org/wiki/' + articleList[i];
 							content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 										'<p>' + place.formatted_address + '</p>' +
 										'<p>' + response[2] + '</p>' + // response[2] for more modern response
@@ -164,6 +149,28 @@ var ViewModel = function() {
 						'</div>';
 						place.infoWindow.setContent(content);
 					}
+					place.infoWindow.open(map, this);
+
+					var lastInfoWindow = null;
+					if (lastInfoWindow === place.infoWindow) {
+						toggleBounce(place.marker);
+						currentLocation = null;
+						place.infoWindow.close(map, this);
+						lastInfoWindow = null;
+					} else {
+
+						if (lastInfoWindow !== null) {
+							lastInfoWindow.close(map, this);
+							toggleBounce(place.marker);
+						}
+
+					
+			        place.infoWindow.open(map, this);
+					lastInfoWindow = place.infoWindow;
+					toggleBounce(place.marker);	
+					map.panTo(place.latLng);
+					}
+					
 				},
 				error: (function () {
 					content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
@@ -171,39 +178,11 @@ var ViewModel = function() {
 									'<p>' + "Failed to reach Wikipedia Servers, please try again..." + '</p>' + 
 					'</div>';
 					place.infoWindow.setContent(content);
-				})
-			}); // end of ajax call		
-		});
-		
-		google.maps.event.addListener(place.marker, 'click', function() {
-			var lastInfoWindow = null;
-
-			return function() {
-
-				if (lastInfoWindow === infoWindow) {
-					toggleBounce(marker);
-					currentLocation = null;
-					infoWindow.close(map, this);
-					lastInfoWindow = null;
-				} else {
-
-					if (lastInfoWindow !== null) {
-						lastInfoWindow.close(map, this);
-						toggleBounce(marker);
-					}
-
-				toggleBounce(marker);	
-		        infoWindow.open(map, this);
-				lastInfoWindow = infoWindow;
-
-				map.panTo(place.latLng);
-				}
-			};
-		});
+				}),
+			}); // end of ajax call	
+//////////////FIX THIS PART!!!! IT WONT OPEN AN INFO WINDOW RIGHT NOW
+		});	
 	}); // End of the forEach loop
-
-	// // run drop() after the map is idle, which should signifiy that it is fully loaded
-	// google.maps.event.addListenerOnce(map, 'idle', drop);
 
 	// animates the correct marker
 	self.list = function (place, marker) {
@@ -214,7 +193,7 @@ var ViewModel = function() {
 
 	self.searchResults = ko.computed(function() {
 		return ko.utils.arrayFilter(self.allPlaces(), function(list) {
-			var listFilter = list.title.toLowerCase().indexOf(self.userInput().toLowerCase()) !== -1;
+			var listFilter = list.title.toLowerCase().indexOf(self.userInput().toLowerCase()) >= 0;
 			if (listFilter) {
 				list.marker.setVisible(true);
 			} else {

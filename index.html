@@ -26,20 +26,20 @@
 	<section class="search-container">
 		<div class="searchBar-tag">Search</div>
 		<div class="search-bar">
-			<input type="search" id="place-id" class="search-input" placeholder="Search" data-bind="textInput: userInput, event: {keyup: searchResults}" />
+			<input type="search" id="place-id" class="search-input" placeholder="Search" data-bind="text: userInput, valueUpdate: 'keyup'" />
 		</div><!-- search-bar -->
 	</section><!-- search-container -->
 
 	<section class="list-container">
 		<div id="list-view" class="list-view">
-			<ul id="name-list" data-bind="foreach: allPlaces">
-				<li class="list-elem" data-bind="text: title, click: list"></li>
+			<ul id="name-list" data-bind="foreach: searchResults">
+				<li class="list-elem" data-bind="text: title, click: $root.list"></li>
 			</ul>
 		</div><!-- list-view -->
 	</section><!-- list-container -->
 
 	<!-- The Goodle Map Canvas -->
-	<div id="map-canvas" class="col-12-xs text-center"></div><!-- map-canvas -->
+	<div id="map-canvas" class="col-12-xs text-center" data-bind="click: currentLocation"></div><!-- map-canvas -->
 
 	<div id="copy" class="col-xs-12 text-center">&copy; 2016 | Caden Albaugh</div><!-- copy -->
 	<div id="topLink" class="col-12-xs text-center"><a href="#top">Back To Top</a></div><!-- topLink -->

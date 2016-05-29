@@ -72,11 +72,26 @@ var places = [
 		lng: -164.437852
 	}
 ];
-
+// Setting this to the global scope so the infowindow will close if a new marker is clicked
 var lastInfoWindow = null;
 
 var ViewModel = function() {
-	var self = this;
+	var self = this,
+		infoWindow,
+		marker,
+		center;
+	// Thanks to Gregory Bolkenstijn on Stack Overflow for this function
+	function calculateCenter() {
+	  center = map.getCenter();
+	}
+	
+	google.maps.event.addDomListener(map, 'idle', function() {
+	  calculateCenter();
+	});
+	
+	google.maps.event.addDomListener(window, 'resize', function() {
+	  map.setCenter(center);
+	});	
 
 	var PlaceMaker = function(data) {
 		self.title = ko.observable(data.title);
@@ -127,16 +142,17 @@ var ViewModel = function() {
 			var content,
 				urlNames = encodeURI(place.title),
 				wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" +
-							 urlNames + "&limit=1&redirects=return&format=json";
+							 urlNames + "&prop=pageimages&limit=1&redirects=return&format=json&pithumbsize=100";
 
 			self.apiTimeout = setTimeout(function() {
 				//alert('ERROR: Failed to load data');
 			}, 5000);
 
 			$.ajax({
+				type: 'GET',
 				url: wikiURL,
 				dataType: "jsonp",
-				Allimages: name,
+				prop: 'pageimages',
 				success: function(response) {
 					clearTimeout(self.apiTimeout);
 					var articleList = response[1];
@@ -147,8 +163,8 @@ var ViewModel = function() {
 							content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 										'<p>' + place.formatted_address + '</p>' +
 										'<p>' + response[2] + '</p>' + // response[2] for more modern response
-										'<p>' + '<a href="' + url + '" target="_blank">' +
-										"View full Wikipedia article" + '</a>' + '</p>' +
+										'<a href="' + url + '" target="_blank">' +
+										"View full Wikipedia article" + '</a>' +
 							'</div>';
 							place.infoWindow.setContent(content);
 						}
@@ -234,3 +250,4 @@ function googleError(e) {
 	alert("Sorry! Google Maps cannot be loaded at this time");
 	console.log(e);
 }
+

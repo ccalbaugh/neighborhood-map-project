@@ -14,6 +14,14 @@ ul {
 	list-style-type: none;
 }
 
+.heading {
+	font-family: 'Amatic SC', cursive;
+	font-weight: 700;
+	font-size: 55px;
+	color: #206E4F;
+	padding-bottom: 0.3em;
+}
+
 #map-canvas {
     width: 760px;
     height: 620px;
@@ -24,32 +32,43 @@ ul {
 
 .search-input {
 	width: 100%;
+	padding-bottom: 10px;
+	font-size: 24px;
+	font-family: 'Josefin Slab', serif;
 }
 
 .list-group-item {
 	display: block;
-	padding: 0.3em 0;
+	padding: 15px 10px;
 	border: 1px solid #e5e5e5;
+	font-family: 'Josefin Slab', serif;
+	font-size: 18px;
+	overflow: hidden;
+	color: #206E4F;
 }
 
 .list-group-item:hover {
 	cursor: pointer;
-	background-color: #bbb;
-	font-size: 110%;
+	background-color: #D9D5C5;
 }
 
 .list-group-item:active {
-	background-color: #bbb;
+	background-color: #D9D5C5;
 }
 
 .infoWindow {
 	justify-content: center;
 	text-align: center;
+	font-family: 'Josefin Slab', serif;
+	font-size: 16px;
+	color: #4E4F3E;
+	background-color: #D9D5C5;
 }
 
 .infoWindow strong {
-	font-size: 24px;
-	color: goldenrod;
+	font-family: 'Amatic SC', cursive;
+	font-size: 32px;
+	color: #206E4F;
 }
 
 #topLink {
@@ -57,11 +76,10 @@ ul {
 }
 
 #copy {
+	font-family: 'Amatic SC', cursive;
     margin-top: 10px;
-    font-size: 25px;
-    font-family: 'Josefin Slab', serif;
-    font-weight: 400;
-    color: goldenrod;
+    font-size: 32px;
+    color:  #206E4F;
 }
 
 
@@ -69,6 +87,32 @@ ul {
 		MEDIA QUERIES
 ******************************/
 
-@media (min-width: 400px) {
+@media (max-width: 1200px) {
+	#map-canvas {
+		width: 100%;
+		max-width: 100%;
+	}
 
+	.search-container {
+		padding: 10px 0px;
+	}
 }
+
+@media (max-width: 800px) {
+	.container {
+
+	}
+	.heading {
+		font-size: 32px;
+		font-weight: 400px;
+	}
+
+	#copy {
+		font-size: 24px;
+	}
+
+	.search-container {
+		display: none;
+	}
+}
+

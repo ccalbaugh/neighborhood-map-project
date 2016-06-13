@@ -23,7 +23,7 @@ ul {
 }
 
 #map-canvas {
-    width: 760px;
+    max-width: 760px;
     height: 620px;
     background-color: #ccc;
     display: block;
@@ -100,7 +100,7 @@ ul {
 
 @media (max-width: 800px) {
 	.container {
-
+		max-width: 95%;
 	}
 	.heading {
 		font-size: 32px;
@@ -113,6 +113,10 @@ ul {
 
 	.search-container {
 		display: none;
+	}
+
+	.infoWindow {
+		max-width: 100%;
 	}
 }
 

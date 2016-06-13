@@ -184,9 +184,8 @@ var ViewModel = function() {
 					place.infoWindow.setContent(content);
 				}),
 			}); // end of ajax call	
-			// if another infoWindow is open, then close it and open the new one
-			// otherwise if you click on the same marker twice, just close the infoWindow
-			if (lastInfoWindow === place.infoWindow) {
+
+			if (lastInfoWindow == place.infoWindow) {
 				currentLocation = null;
 				place.infoWindow.close(map, this);
 				lastInfoWindow = null;

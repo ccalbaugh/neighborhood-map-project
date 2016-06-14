@@ -21,14 +21,14 @@ var places = [
 		latLng: {lat: 63.069547, lng: -151.005775},
 		lat: 63.069547,
 		lng: -151.005775
-	}, 
+	},
 	{
 		title: 'Grand Teton',
 		formatted_address: 'Grand Teton National Park, Teton County, WY',
 		latLng: {lat: 43.741010, lng: -110.802350},
 		lat: 43.741010,
 		lng: -110.802350
-	}, 
+	},
 	{
 		title: 'Mount Rainier',
 		formatted_address: 'Mount Rainier National Park, Pierce County, WA',
@@ -84,14 +84,14 @@ var ViewModel = function() {
 	function calculateCenter() {
 	  center = map.getCenter();
 	}
-	
+
 	google.maps.event.addDomListener(map, 'idle', function() {
 	  calculateCenter();
 	});
-	
+
 	google.maps.event.addDomListener(window, 'resize', function() {
 	  map.setCenter(center);
-	});	
+	});
 
 	var PlaceMaker = function(data) {
 		self.title = ko.observable(data.title);
@@ -115,7 +115,7 @@ var ViewModel = function() {
 		if (marker.getAnimation() !== null) {
 			setTimeout(function() { marker.setAnimation(null); }, 750);
 		} else {
-			
+
 			marker.setAnimation(google.maps.Animation.BOUNCE);
 			setTimeout(function() { marker.setAnimation(null); }, 750);
 			self.setLocation(marker);
@@ -131,7 +131,7 @@ var ViewModel = function() {
 		});
 
 
-		place.marker = marker;	
+		place.marker = marker;
 
 		google.maps.event.addListener(place.marker, 'click', function() {
 			place.infoWindow = new google.maps.InfoWindow();
@@ -171,7 +171,7 @@ var ViewModel = function() {
 					} else {
 						content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 										'<p>' + place.formatted_address + '</p>' +
-										'<p>' + "Sorry, No articles were found on Wikipedia" + '</p>' + 
+										'<p>' + "Sorry, No articles were found on Wikipedia" + '</p>' +
 						'</div>';
 						place.infoWindow.setContent(content);
 					}
@@ -179,34 +179,31 @@ var ViewModel = function() {
 				error: (function () {
 					content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 									'<p>' + place.formatted_address + '</p>' +
-									'<p>' + "Failed to reach Wikipedia Servers, please try again..." + '</p>' + 
+									'<p>' + "Failed to reach Wikipedia Servers, please try again..." + '</p>' +
 					'</div>';
 					place.infoWindow.setContent(content);
 				}),
-			}); // end of ajax call	
+			}); // end of ajax call
+
 
 			if (lastInfoWindow == place.infoWindow) {
 				currentLocation = null;
 				place.infoWindow.close(map, this);
 				lastInfoWindow = null;
-			} else {
-
-				if (lastInfoWindow !== null) {
+			} else if (lastInfoWindow !== null) {
 					lastInfoWindow.close(map, this);
-				}
+			}
 
 			place.infoWindow.open(map, this);
-			lastInfoWindow = place.infoWindow;	
-			
-			}
-		});	
+			lastInfoWindow = place.infoWindow;
+		});
 
 		return place.infoWindow;
 	}); // End of the forEach loop
 
 	// links list to the allPlaces marker info
 	self.list = function (place, marker) {
-        google.maps.event.trigger(place.marker, 'click'); 
+        google.maps.event.trigger(place.marker, 'click');
     };
 
     // used for Search functionality with local names
@@ -224,7 +221,7 @@ var ViewModel = function() {
 
 			return listFilter;
 		});
-	});	
+	});
 };
 
 // Where the google Map is created
@@ -245,7 +242,7 @@ function initMap() {
 }
 
 // creates an alert if the Google Maps API can't be reached
-function googleError(e) { 
+function googleError(e) {
 	alert("Sorry! Google Maps cannot be loaded at this time");
 	console.log(e);
 }

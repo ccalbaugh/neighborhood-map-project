@@ -77,9 +77,9 @@ var lastInfoWindow = null;
 
 var ViewModel = function() {
 	var self = this,
-		infoWindow,
 		marker,
-		center;
+		center,
+		infoWindow = new google.maps.InfoWindow();;
 	// Thanks to Gregory Bolkenstijn on Stack Overflow for this function
 	function calculateCenter() {
 	  center = map.getCenter();
@@ -113,11 +113,11 @@ var ViewModel = function() {
 
 	self.toggleBounce = function(marker) {
 		if (marker.getAnimation() !== null) {
-			setTimeout(function() { marker.setAnimation(null); }, 750);
+			setTimeout(function() { marker.setAnimation(null); }, 1400);
 		} else {
 
 			marker.setAnimation(google.maps.Animation.BOUNCE);
-			setTimeout(function() { marker.setAnimation(null); }, 750);
+			setTimeout(function() { marker.setAnimation(null); }, 1400);
 			self.setLocation(marker);
 		}
 	};
@@ -130,11 +130,16 @@ var ViewModel = function() {
 			animation: google.maps.Animation.DROP
 		});
 
-
 		place.marker = marker;
+		// This code sets the bounds for the map
+		// var bounds = new google.maps.LatLngBounds();
+		// if (marker.title == 'Grand Teton')
+		// 	bounds.extend(marker.position);
+
+		// map.fitBounds(bounds);
 
 		google.maps.event.addListener(place.marker, 'click', function() {
-			place.infoWindow = new google.maps.InfoWindow();
+			infoWindow.open(map, this);
 			self.toggleBounce(place.marker);
 			map.panTo(place.latLng);
 
@@ -166,14 +171,14 @@ var ViewModel = function() {
 										'<a href="' + url + '" target="_blank">' +
 										"View full Wikipedia article" + '</a>' +
 							'</div>';
-							place.infoWindow.setContent(content);
+							infoWindow.setContent(content);
 						}
 					} else {
 						content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 										'<p>' + place.formatted_address + '</p>' +
 										'<p>' + "Sorry, No articles were found on Wikipedia" + '</p>' +
 						'</div>';
-						place.infoWindow.setContent(content);
+						infoWindow.setContent(content);
 					}
 				},
 				error: (function () {
@@ -181,24 +186,24 @@ var ViewModel = function() {
 									'<p>' + place.formatted_address + '</p>' +
 									'<p>' + "Failed to reach Wikipedia Servers, please try again..." + '</p>' +
 					'</div>';
-					place.infoWindow.setContent(content);
+					infoWindow.setContent(content);
 				}),
 			}); // end of ajax call
 
 
-			if (lastInfoWindow == place.infoWindow) {
+			if (lastInfoWindow == infoWindow) {
 				currentLocation = null;
-				place.infoWindow.close(map, this);
+				infoWindow.close(map, this);
 				lastInfoWindow = null;
 			} else if (lastInfoWindow !== null) {
 					lastInfoWindow.close(map, this);
 			}
 
-			place.infoWindow.open(map, this);
-			lastInfoWindow = place.infoWindow;
+			infoWindow.open(map, this);
+			lastInfoWindow = infoWindow;
 		});
 
-		return place.infoWindow;
+		return infoWindow;
 	}); // End of the forEach loop
 
 	// links list to the allPlaces marker info

@@ -73,7 +73,7 @@ var places = [
 	}
 ];
 // Setting this to the global scope so the infowindow will close if a new marker is clicked
-var lastInfoWindow = null;
+
 
 var ViewModel = function() {
 	var self = this,
@@ -121,25 +121,25 @@ var ViewModel = function() {
 			self.setLocation(marker);
 		}
 	};
+	// instantiate this variable to make sure the map is set w/in specific NE and SW points
+	var bounds = new google.maps.LatLngBounds();
 
 	self.allPlaces().forEach(function(place) {
 		marker = new google.maps.Marker({
 			map: map,
-			position: place.latLng,
 			title: place.title,
+			position: place.latLng,
 			animation: google.maps.Animation.DROP
 		});
 
 		place.marker = marker;
 		// This code sets the bounds for the map
-		// var bounds = new google.maps.LatLngBounds();
-		// if (marker.title == 'Grand Teton')
-		// 	bounds.extend(marker.position);
 
-		// map.fitBounds(bounds);
+		bounds.extend(marker.position);
+
+
 
 		google.maps.event.addListener(place.marker, 'click', function() {
-			infoWindow.open(map, this);
 			self.toggleBounce(place.marker);
 			map.panTo(place.latLng);
 
@@ -188,8 +188,12 @@ var ViewModel = function() {
 					'</div>';
 					infoWindow.setContent(content);
 				}),
-			}); // end of ajax call
+			}).done(function(data) {
 
+			}).fail(function(jqXHR, textStatus) {
+				alert(textStatus);
+			}); // end of ajax call
+			var lastInfoWindow = null;
 
 			if (lastInfoWindow == infoWindow) {
 				currentLocation = null;
@@ -199,12 +203,12 @@ var ViewModel = function() {
 					lastInfoWindow.close(map, this);
 			}
 
+			infoWindow.close(map, this);
 			infoWindow.open(map, this);
 			lastInfoWindow = infoWindow;
 		});
-
-		return infoWindow;
 	}); // End of the forEach loop
+	map.fitBounds(bounds);
 
 	// links list to the allPlaces marker info
 	self.list = function (place, marker) {

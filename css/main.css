@@ -3,7 +3,8 @@
 	/*border: 1px solid blue;*/
 }
 
-html, body {
+html,
+body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -15,14 +16,14 @@ ul {
 }
 
 .heading {
-	font-family: 'Amatic SC', cursive;
+	font-family: "Amatic SC", cursive;
 	font-weight: 700;
 	font-size: 55px;
 	color: #206E4F;
 	padding-bottom: 0.3em;
 }
 
-#map-canvas {
+.map-canvas {
     max-width: 760px;
     height: 620px;
     background-color: #ccc;
@@ -34,14 +35,14 @@ ul {
 	width: 100%;
 	padding-bottom: 10px;
 	font-size: 24px;
-	font-family: 'Josefin Slab', serif;
+	font-family: "Josefin Slab", serif;
 }
 
 .list-group-item {
 	display: block;
 	padding: 15px 10px;
 	border: 1px solid #e5e5e5;
-	font-family: 'Josefin Slab', serif;
+	font-family: "Josefin Slab", serif;
 	font-size: 18px;
 	overflow: hidden;
 	color: #206E4F;
@@ -59,24 +60,24 @@ ul {
 .infoWindow {
 	justify-content: center;
 	text-align: center;
-	font-family: 'Josefin Slab', serif;
+	font-family: "Josefin Slab", serif;
 	font-size: 16px;
 	color: #4E4F3E;
 	background-color: #D9D5C5;
 }
 
 .infoWindow strong {
-	font-family: 'Amatic SC', cursive;
+	font-family: "Amatic SC", cursive;
 	font-size: 32px;
 	color: #206E4F;
 }
 
-#topLink {
+.topLink {
     display: none;
 }
 
-#copy {
-	font-family: 'Amatic SC', cursive;
+.copy {
+	font-family: "Amatic SC", cursive;
     margin-top: 10px;
     font-size: 32px;
     color:  #206E4F;

@@ -72,14 +72,12 @@ var places = [
 		lng: -164.437852
 	}
 ];
-// Setting this to the global scope so the infowindow will close if a new marker is clicked
-
 
 var ViewModel = function() {
 	var self = this,
 		marker,
 		center,
-		infoWindow = new google.maps.InfoWindow();;
+		infoWindow = new google.maps.InfoWindow();
 	// Thanks to Gregory Bolkenstijn on Stack Overflow for this function
 	function calculateCenter() {
 	  center = map.getCenter();
@@ -135,7 +133,7 @@ var ViewModel = function() {
 		place.marker = marker;
 		// This code sets the bounds for the map
 
-		bounds.extend(marker.position);
+		bounds.extend(marker.position); // just add every marker and let the API sort it out
 
 
 
@@ -153,46 +151,46 @@ var ViewModel = function() {
 				//alert('ERROR: Failed to load data');
 			}, 5000);
 
-			$.ajax({
-				type: 'GET',
-				url: wikiURL,
-				dataType: "jsonp",
-				prop: 'pageimages',
-				success: function(response) {
-					clearTimeout(self.apiTimeout);
-					var articleList = response[1];
-					console.log(response);
-					if (articleList.length > 0) {
-						for (var i = 0; i < articleList.length; i++) {
-							var url = response[3]; // response[3] gives back the wiki URL
-							content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
-										'<p>' + place.formatted_address + '</p>' +
-										'<p>' + response[2] + '</p>' + // response[2] for more modern response
-										'<a href="' + url + '" target="_blank">' +
-										"View full Wikipedia article" + '</a>' +
-							'</div>';
-							infoWindow.setContent(content);
-						}
-					} else {
+			function ajax() {
+				return $.ajax({
+					type: 'GET',
+					url: wikiURL,
+					dataType: "jsonp",
+					prop: 'pageimages'
+				});
+			}
+
+			ajax().done(function(response) {
+				clearTimeout(self.apiTimeout);
+				var articleList = response[1];
+				console.log(response);
+				if (articleList.length > 0) {
+					for (var i = 0; i < articleList.length; i++) {
+						var url = response[3]; // response[3] gives back the wiki URL
 						content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
-										'<p>' + place.formatted_address + '</p>' +
-										'<p>' + "Sorry, No articles were found on Wikipedia" + '</p>' +
+									'<p>' + place.formatted_address + '</p>' +
+									'<p>' + response[2] + '</p>' + // response[2] for more modern response
+									'<a href="' + url + '" target="_blank">' +
+									"View full Wikipedia article" + '</a>' +
 						'</div>';
 						infoWindow.setContent(content);
 					}
-				},
-				error: (function () {
+				} else {
 					content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 									'<p>' + place.formatted_address + '</p>' +
-									'<p>' + "Failed to reach Wikipedia Servers, please try again..." + '</p>' +
+									'<p>' + "Sorry, No articles were found on Wikipedia" + '</p>' +
 					'</div>';
 					infoWindow.setContent(content);
-				}),
-			}).done(function(data) {
-
-			}).fail(function(jqXHR, textStatus) {
-				alert(textStatus);
+				}
+			}).fail(function(jqXHR, error) {
+				content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
+								'<p>' + place.formatted_address + '</p>' +
+								'<p>' + "Failed to reach Wikipedia Servers, please try again..." + '</p>' +
+				'</div>';
+				infoWindow.setContent(content);
+				alert(error);
 			}); // end of ajax call
+
 			var lastInfoWindow = null;
 
 			if (lastInfoWindow == infoWindow) {
@@ -201,11 +199,11 @@ var ViewModel = function() {
 				lastInfoWindow = null;
 			} else if (lastInfoWindow !== null) {
 					lastInfoWindow.close(map, this);
+			} else {
+				infoWindow.open(map, this);
+				lastInfoWindow = infoWindow;
 			}
 
-			infoWindow.close(map, this);
-			infoWindow.open(map, this);
-			lastInfoWindow = infoWindow;
 		});
 	}); // End of the forEach loop
 	map.fitBounds(bounds);

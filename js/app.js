@@ -170,9 +170,12 @@ var ViewModel = function() {
 						content = '<div class="infoWindow"><strong>' + place.title + '</strong><br>' +
 									'<p>' + place.formatted_address + '</p>' +
 									'<p>' + response[2] + '</p>' + // response[2] for more modern response
-									'<a href="' + url + '" target="_blank">' +
+									'<a href="' + url + '" target="_blank" class="infowindow_link">' +
 									"View full Wikipedia article" + '</a>' +
 						'</div>';
+						$(".infowindow_link").live('click', function() {
+							window.location.href = this.href;
+						});
 						infoWindow.setContent(content);
 					}
 				} else {
@@ -203,7 +206,6 @@ var ViewModel = function() {
 				infoWindow.open(map, this);
 				lastInfoWindow = infoWindow;
 			}
-
 		});
 	}); // End of the forEach loop
 	map.fitBounds(bounds);

@@ -173,9 +173,9 @@ var ViewModel = function() {
 									'<a href="' + url + '" target="_blank" class="infowindow_link">' +
 									"View full Wikipedia article" + '</a>' +
 						'</div>';
-						$(".infowindow_link").live('click', function() {
-							window.location.href = this.href;
-						});
+						// $(".infowindow_link").live('click', function() {
+						// 	window.location.href = this.href;
+						// });
 						infoWindow.setContent(content);
 					}
 				} else {

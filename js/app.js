@@ -147,10 +147,6 @@ var ViewModel = function() {
 				wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&format=json&search=" +
 							 urlNames + "&prop=pageimages&limit=1&redirects=return&format=json&pithumbsize=100";
 
-			self.apiTimeout = setTimeout(function() {
-				//alert('ERROR: Failed to load data');
-			}, 5000);
-
 			function ajax() {
 				return $.ajax({
 					type: 'GET',
@@ -161,7 +157,6 @@ var ViewModel = function() {
 			}
 
 			ajax().done(function(response) {
-				clearTimeout(self.apiTimeout);
 				var articleList = response[1];
 				console.log(response);
 				if (articleList.length > 0) {

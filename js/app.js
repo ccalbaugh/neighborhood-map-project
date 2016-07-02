@@ -203,7 +203,10 @@ var ViewModel = function() {
 			}
 		});
 	}); // End of the forEach loop
-	map.fitBounds(bounds);
+	window.onresize = function() {
+		map.fitBounds(bounds);
+	}
+
 
 	// links list to the allPlaces marker info
 	self.list = function (place, marker) {

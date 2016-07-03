@@ -203,6 +203,8 @@ var ViewModel = function() {
 			}
 		});
 	}); // End of the forEach loop
+	map.fitBounds(bounds);
+
 	window.onresize = function() {
 		map.fitBounds(bounds);
 	}
@@ -229,13 +231,21 @@ var ViewModel = function() {
 			return listFilter;
 		});
 	});
+
+	var toggle = document.querySelector('.drawer-toggle-label');
+	var drawer = document.querySelector('.drawer');
+
+	toggle.addEventListener('click', function(e) {
+		drawer.classList.toggle('open');
+		e.stopPropagation();
+	});
 };
 
 // Where the google Map is created
 function initMap() {
 	options = {
 			center: {lat: 46.879116, lng: -113.996196}, // Missoula, MT
-			zoom: 3,
+			zoom: 6,
 			disableDefaultUI: false,
 			scrollwheel: false,
 			draggable: true,

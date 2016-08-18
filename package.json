@@ -1,0 +1,27 @@
+{
+  "name": "neighborhood-map-project",
+  "version": "1.0.0",
+  "description": "![screenshot](https://cloud.githubusercontent.com/assets/15692477/16016415/8fe7cbd4-3160-11e6-9ced-5d959995d8c4.png)",
+  "main": "index.js",
+  "dependencies": {
+    "gulp-sass": "^2.3.2",
+    "gulp": "^3.9.1",
+    "normalize.css": "^4.2.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ccalbaugh/neighborhood-map-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ccalbaugh/neighborhood-map-project/issues"
+  },
+  "homepage": "https://github.com/ccalbaugh/neighborhood-map-project#readme"
+}
